@@ -1,16 +1,29 @@
 #!/bin/bash
+# init variables
+directory=""
+output_file=""
+prefix=""
+postfix=""
 
-# Directory with logs
-directory=$1
+# help
+usage() {
+  echo "Usage: $0 -d <directory> -o <output_file> -s <prefix> -e <postfix>"
+  exit 1
+}
+# getopts
+while getopts "d:o:p:s:" opt; do
+  case "$opt" in
+    d) directory=$OPTARG ;;
+    o) output_file=$OPTARG ;;
+    s) prefix=$OPTARG ;;
+    e) postfix=$OPTARG ;;
+    *) usage ;; 
+  esac
+done
 
-# Output CSV
-output_file=$2
-
-# Non-variable Prefix
-prefix=$3
-
-# Non-variable Postfix
-postfix=$4
+if [ -z "$directory" ] || [ -z "$output_file" ] || [ -z "$prefix" ] || [ -z "$postfix" ]; then
+  usage
+fi
 
 # CSV-header
 echo "Filename,Total Reads (mln),Overall Alignment Rate,Calculated Value (mln)" > $directory/$output_file
